@@ -217,7 +217,7 @@ with st.sidebar:
     )
     os.environ["GROQ_MODEL"] = st.text_input(
         "Modelo Groq",
-        value=os.getenv("GROQ_MODEL", "llama3-70b-8192"),
+        value=os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile"),
     )
 
     groq_ok = bool(os.getenv("GROQ_API_KEY"))
