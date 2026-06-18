@@ -57,10 +57,27 @@
 
         .footer {
             text-align: center;
-            padding: 0.6rem;
+            padding: 0.8rem;
+            background: rgba(245, 240, 232, 0.8);
+        }
+
+        .cafecito-btn {
+            display: inline-block;
+            margin-bottom: 0.5rem;
+            transition: transform 0.2s;
+        }
+
+        .cafecito-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .cafecito-btn img {
+            height: 48px;
+        }
+
+        .footer-text {
             font-size: 0.8rem;
             color: #a89888;
-            background: rgba(245, 240, 232, 0.8);
         }
 
         @media (max-width: 768px) {
@@ -84,7 +101,12 @@
     </div>
 
     <div class="footer">
-        La biodescodificación es un enfoque complementario · no reemplaza la atención médica profesional
+        <a href="https://cafecito.app/mawucano" target="_blank" rel="noopener" class="cafecito-btn">
+            <img src="https://cdn.cafecito.app/imgs/buttons/button_2.svg" alt="Invitame un café en cafecito.app" />
+        </a>
+        <div class="footer-text">
+            La biodescodificación es un enfoque complementario · no reemplaza la atención médica profesional
+        </div>
     </div>
 </body>
 </html>
