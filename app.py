@@ -208,34 +208,48 @@ if "messages" not in st.session_state:
     st.session_state.messages = []
 
 with st.sidebar:
-    st.markdown("### \u262e Conexión")
-
-    os.environ["GROQ_API_KEY"] = st.text_input(
-        "API Key de Groq",
-        value=os.getenv("GROQ_API_KEY", ""),
-        type="password",
-    )
-    os.environ["GROQ_MODEL"] = st.text_input(
-        "Modelo Groq",
-        value=os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile"),
-    )
-
-    groq_ok = bool(os.getenv("GROQ_API_KEY"))
-    if groq_ok:
-        st.caption("\U0001f7e2 Groq conectado")
-    else:
-        st.caption("\U0001f7e1 Sin conexión")
-
-    st.markdown("---")
     st.markdown(
-        '<div style="font-size:0.85rem; opacity:0.7; line-height:1.5;">'
-        "La biodescodificación es un enfoque complementario "
-        "que no reemplaza la atención médica profesional."
+        '<div style="font-family: Cormorant Garamond, serif; '
+        'font-style: italic; font-size: 1.05rem; line-height: 1.6; '
+        'color: #d4c4a8; padding: 0.5rem 0 1rem 0; '
+        'border-bottom: 1px solid #5a4a3a;">'
+        '"El cuerpo no miente. '
+        'Las palabras pueden ocultar la verdad, '
+        'pero el cuerpo siempre la dice."'
+        "<br><span style='font-size:0.85rem; color:#8a7a6a;'>"
+        "— Christian Flèche</span>"
         "</div>",
         unsafe_allow_html=True,
     )
 
-    if st.button("\U0001f9f9 Limpiar", use_container_width=True):
+    st.markdown("###  Cómo usar")
+    st.markdown(
+        '<div style="font-size:0.9rem; line-height:1.7; color:#d4c4a8;">'
+        "1. Escribí tu consulta abajo<br>"
+        "2. El Sabio Interior responde<br>"
+        "3. Reflexioná y seguí la conversación"
+        "</div>",
+        unsafe_allow_html=True,
+    )
+
+    st.markdown("---")
+    st.markdown(
+        '<div style="font-size:0.85rem; opacity:0.6; line-height:1.5; '
+        'color:#b8a898;">'
+        "️ Esta herramienta es un guía de orientación, "
+        "no reemplaza la atención médica profesional."
+        "</div>",
+        unsafe_allow_html=True,
+    )
+
+    groq_ok = bool(os.getenv("GROQ_API_KEY"))
+    if groq_ok:
+        st.caption(" Conectado")
+    else:
+        st.caption(" Modo local")
+    st.caption(f"modelo: {os.getenv('GROQ_MODEL', 'llama-3.3-70b-versatile')}")
+
+    if st.button("\U0001f9f9 Limpiar conversación", use_container_width=True):
         st.session_state.messages = []
         st.rerun()
 
