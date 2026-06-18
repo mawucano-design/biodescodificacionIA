@@ -204,6 +204,9 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
+if "messages" not in st.session_state:
+    st.session_state.messages = []
+
 with st.sidebar:
     st.markdown("### \u262e Conexión")
 
