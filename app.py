@@ -210,52 +210,21 @@ if "messages" not in st.session_state:
 with st.sidebar:
     st.markdown("### \u262e Conexión")
 
-    modo = st.radio(
-        "Modo",
-        ["Automático", "Groq", "OpenAI", "Ollama (local)", "Sin API"],
-        index=0,
-        label_visibility="collapsed",
+    os.environ["GROQ_API_KEY"] = st.text_input(
+        "API Key de Groq",
+        value=os.getenv("GROQ_API_KEY", ""),
+        type="password",
+    )
+    os.environ["GROQ_MODEL"] = st.text_input(
+        "Modelo Groq",
+        value=os.getenv("GROQ_MODEL", "llama3-70b-8192"),
     )
 
-    with st.expander(" Groq", expanded=False):
-        os.environ["GROQ_API_KEY"] = st.text_input(
-            "API Key", value=os.getenv("GROQ_API_KEY", ""),
-            type="password", key="groq_key",
-        )
-        os.environ["GROQ_MODEL"] = st.text_input(
-            "Modelo", value=os.getenv("GROQ_MODEL", "llama3-70b-8192"),
-            key="groq_model",
-        )
-
-    with st.expander(" OpenAI", expanded=False):
-        os.environ["OPENAI_API_KEY"] = st.text_input(
-            "API Key", value=os.getenv("OPENAI_API_KEY", ""),
-            type="password", key="openai_key",
-        )
-        os.environ["OPENAI_MODEL"] = st.text_input(
-            "Modelo", value=os.getenv("OPENAI_MODEL", "gpt-4o-mini"),
-            key="openai_model",
-        )
-
-    with st.expander(" Ollama", expanded=False):
-        os.environ["OLLAMA_URL"] = st.text_input(
-            "URL", value=os.getenv("OLLAMA_URL", "http://localhost:11434/v1"),
-            key="ollama_url",
-        )
-        os.environ["OLLAMA_MODEL"] = st.text_input(
-            "Modelo", value=os.getenv("OLLAMA_MODEL", "llama3"),
-            key="ollama_model",
-        )
-
-    st.markdown("---")
-    gh_ok = bool(os.getenv("GITHUB_TOKEN"))
     groq_ok = bool(os.getenv("GROQ_API_KEY"))
     if groq_ok:
         st.caption("\U0001f7e2 Groq conectado")
-    if gh_ok:
-        st.caption("\U0001f7e2 GitHub conectado")
-    if not groq_ok and not gh_ok:
-        st.caption("\U0001f7e1 Solo modo local")
+    else:
+        st.caption("\U0001f7e1 Sin conexión")
 
     st.markdown("---")
     st.markdown(
@@ -290,38 +259,10 @@ if prompt := st.chat_input("Pregúntale al Sabio Interior..."):
     )
 
     with st.spinner("El Sabio Interior medita su respuesta..."):
-        api_key = os.getenv("OPENAI_API_KEY", "")
         groq_key = os.getenv("GROQ_API_KEY", "")
-        use_ollama = modo == "Ollama (local)"
-        use_api = modo == "OpenAI"
-        use_groq = modo == "Groq"
-        auto = modo == "Automático"
-        only_kb = modo == "Sin API"
-
-        if only_kb:
-            respuesta = responder_sin_api(st.session_state.messages)
-        elif use_groq:
+        if groq_key:
             os.environ["USE_GROQ"] = "true"
             os.environ["USE_OLLAMA"] = "false"
-            respuesta = responder(st.session_state.messages)
-        elif use_ollama:
-            os.environ["USE_OLLAMA"] = "true"
-            os.environ["USE_GROQ"] = "false"
-            respuesta = responder(st.session_state.messages)
-        elif use_api or (auto and api_key):
-            os.environ["USE_OLLAMA"] = "false"
-            os.environ["USE_GROQ"] = "false"
-            respuesta = responder(st.session_state.messages)
-        elif auto and groq_key:
-            os.environ["USE_GROQ"] = "true"
-            os.environ["USE_OLLAMA"] = "false"
-            try:
-                respuesta = responder(st.session_state.messages)
-            except Exception:
-                respuesta = responder_sin_api(st.session_state.messages)
-        elif auto:
-            os.environ["USE_OLLAMA"] = "true"
-            os.environ["USE_GROQ"] = "false"
             try:
                 respuesta = responder(st.session_state.messages)
             except Exception:
