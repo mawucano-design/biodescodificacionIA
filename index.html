@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sabio Interior - Biodescodificación</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: linear-gradient(160deg, #f5f0e8 0%, #e8e0d0 30%, #d8d0c0 100%);
+            font-family: 'Georgia', 'Times New Roman', serif;
+            min-height: 100vh;
+        }
+
+        .header {
+            text-align: center;
+            padding: 1.2rem 1rem 0.6rem;
+            background: rgba(245, 240, 232, 0.85);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #d4c8b8;
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+            font-weight: 400;
+            color: #4a3728;
+            letter-spacing: 3px;
+        }
+
+        .header h1 span {
+            font-size: 2rem;
+        }
+
+        .header p {
+            font-style: italic;
+            color: #8a7a6a;
+            font-size: 0.95rem;
+            margin-top: 0.2rem;
+        }
+
+        .iframe-container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0.5rem;
+        }
+
+        .iframe-container iframe {
+            width: 100%;
+            height: calc(100vh - 110px);
+            border: none;
+            border-radius: 12px 12px 0 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            background: white;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 0.6rem;
+            font-size: 0.8rem;
+            color: #a89888;
+            background: rgba(245, 240, 232, 0.8);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 { font-size: 1.6rem; }
+            .iframe-container iframe { height: calc(100vh - 100px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1><span>🍃</span> Sabio Interior</h1>
+        <p>— orientación en biodescodificación —</p>
+    </div>
+
+    <div class="iframe-container">
+        <iframe src="https://biodescodificacionia.streamlit.app?embed=true" 
+                allow="clipboard-read; clipboard-write"
+                loading="lazy"
+                title="Sabio Interior - Biodescodificación">
+        </iframe>
+    </div>
+
+    <div class="footer">
+        La biodescodificación es un enfoque complementario · no reemplaza la atención médica profesional
+    </div>
+</body>
+</html>
