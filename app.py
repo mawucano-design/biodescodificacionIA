@@ -35,10 +35,10 @@ with st.sidebar:
 
     modo = st.radio(
         "Modo de conexión",
-        ["Automático", "OpenAI", "Ollama (local)", "Sin API (solo KB)"],
+        ["Automático", "OpenAI", "Groq", "Ollama (local)", "Sin API (solo KB)"],
         index=0,
         help=(
-            "Automático: usa OpenAI si hay API key, si no Ollama si está disponible, "
+            "Automático: prueba OpenAI, luego Groq, luego Ollama, "
             "si no usa solo la base de conocimiento local."
         ),
     )
@@ -62,6 +62,17 @@ with st.sidebar:
         os.environ["OLLAMA_MODEL"] = st.text_input(
             "Modelo Ollama",
             value=os.getenv("OLLAMA_MODEL", "llama3"),
+        )
+
+    with st.expander(" Configuración Groq", expanded=False):
+        os.environ["GROQ_API_KEY"] = st.text_input(
+            "API Key de Groq",
+            value=os.getenv("GROQ_API_KEY", ""),
+            type="password",
+        )
+        os.environ["GROQ_MODEL"] = st.text_input(
+            "Modelo Groq",
+            value=os.getenv("GROQ_MODEL", "llama3-70b-8192"),
         )
 
     st.markdown("---")
@@ -102,21 +113,37 @@ if prompt := st.chat_input("Describe tu síntoma, emoción o consulta..."):
     with st.chat_message("assistant"):
         with st.spinner("Consultando la base de conocimiento..."):
             api_key = os.getenv("OPENAI_API_KEY", "")
+            groq_key = os.getenv("GROQ_API_KEY", "")
             use_ollama = modo == "Ollama (local)"
             use_api = modo == "OpenAI"
+            use_groq = modo == "Groq"
             auto = modo == "Automático"
             only_kb = modo == "Sin API (solo KB)"
 
             if only_kb:
                 respuesta = responder_sin_api(st.session_state.messages)
+            elif use_groq:
+                os.environ["USE_GROQ"] = "true"
+                os.environ["USE_OLLAMA"] = "false"
+                respuesta = responder(st.session_state.messages)
             elif use_ollama:
                 os.environ["USE_OLLAMA"] = "true"
+                os.environ["USE_GROQ"] = "false"
                 respuesta = responder(st.session_state.messages)
             elif use_api or (auto and api_key):
                 os.environ["USE_OLLAMA"] = "false"
+                os.environ["USE_GROQ"] = "false"
                 respuesta = responder(st.session_state.messages)
+            elif auto and groq_key:
+                os.environ["USE_GROQ"] = "true"
+                os.environ["USE_OLLAMA"] = "false"
+                try:
+                    respuesta = responder(st.session_state.messages)
+                except Exception:
+                    respuesta = responder_sin_api(st.session_state.messages)
             elif auto:
                 os.environ["USE_OLLAMA"] = "true"
+                os.environ["USE_GROQ"] = "false"
                 try:
                     respuesta = responder(st.session_state.messages)
                 except Exception:

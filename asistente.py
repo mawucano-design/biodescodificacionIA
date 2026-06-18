@@ -45,8 +45,15 @@ def get_client():
     api_url = os.getenv("OPENAI_API_URL", "")
     model = os.getenv("OPENAI_MODEL", "")
     use_ollama = os.getenv("USE_OLLAMA", "false").lower() == "true"
+    use_groq = os.getenv("USE_GROQ", "false").lower() == "true"
 
-    if use_ollama:
+    if use_groq:
+        client = OpenAI(
+            base_url="https://api.groq.com/openai/v1",
+            api_key=os.getenv("GROQ_API_KEY", ""),
+        )
+        model = model or os.getenv("GROQ_MODEL", "llama3-70b-8192")
+    elif use_ollama:
         client = OpenAI(
             base_url=os.getenv("OLLAMA_URL", "http://localhost:11434/v1"),
             api_key="ollama",
